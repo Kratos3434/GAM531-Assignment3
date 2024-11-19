@@ -101,7 +101,8 @@ int main() {
 	// Capture the mouse cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-
+	// Enable Depth Testing
+	glEnable(GL_DEPTH_TEST);
 	//This loop renders the window we created above 
 	Shader ourShader("shader.vs", "shader.fs");
 	//Set the model
@@ -242,33 +243,76 @@ void processInput(GLFWwindow* window)
 void init(void)
 
 {	//Hexagon 1
+	//float vertices1[] = {
+	//	0.3f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Center 
+	//	0.1f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Left
+	//	0.2f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-left
+	//	0.4f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-right
+	//	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Right
+	//	0.4f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-right
+	//	0.2f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-left
+	//};
 	float vertices1[] = {
-		0.3f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Center 
-		0.1f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Left
-		0.2f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-left
-		0.4f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-right
-		0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Right
-		0.4f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-right
-		0.2f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-left
+		0.4f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
+		0.6f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
+		0.6f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
+		0.4f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
+
+		0.4f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.4f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
 	};
+	// 
 	//Hexagon 2
+	//float vertices2[] = {
+	//	0.3f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Center
+	//	0.1f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Left
+	//	0.2f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-left
+	//	0.4f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-right
+	//	0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Right
+	//	0.4f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-right
+	//	0.2f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-left
+	//};
 	float vertices2[] = {
-		0.3f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Center
-		0.1f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Left
-		0.2f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-left
-		0.4f, 0.7f, 0.0f, 1.0f, 0.0f, 0.0f,// Top-right
-		0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,// Right
-		0.4f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-right
-		0.2f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-left
+		0.4f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
+		0.6f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
+		0.6f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
+		0.4f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
+
+		0.4f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.4f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
 	};
+
+	//int indices[] = {
+	//	0, 1, 2,
+	//	0, 2, 3,
+	//	0, 3, 4,
+	//	0, 4, 5,
+	//	0, 5, 6,
+	//	0, 6, 1
+	//};
 
 	int indices[] = {
 		0, 1, 2,
-		0, 2, 3,
-		0, 3, 4,
-		0, 4, 5,
-		0, 5, 6,
-		0, 6, 1
+		2, 3, 0,
+
+		4, 5, 6,
+		6, 7, 4,
+		
+		0, 4, 7,
+		7, 3, 0,
+
+		1, 5, 6,
+		6, 2, 1,
+
+		3, 2, 6,
+		6, 7, 3,
+
+		0, 1, 5,
+		5, 4, 0
 	};
 
 
@@ -330,6 +374,7 @@ void init(void)
 void render() {
 	static const float black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	glClearBufferfv(GL_COLOR, 0, black);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//Assignment 1 functionality
 	if (leftMove) {
 		shape1X -= 0.001f; 
@@ -358,7 +403,7 @@ void render() {
 
 	if (!shape1Hidden) {
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	}
 	//Shape 2
 	glm::mat4 model2 = glm::mat4(1.0f);
@@ -371,7 +416,7 @@ void render() {
 
 	if (!shape2Hidden) {
 		glBindVertexArray(VAO2);
-		glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	}
 }
 
