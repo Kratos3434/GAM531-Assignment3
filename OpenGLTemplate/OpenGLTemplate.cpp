@@ -6,6 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 void processInput(GLFWwindow* window);
 void init(void);
@@ -14,6 +16,8 @@ void transformations(Shader& ourShader);
 
 void mouse_callback(GLFWwindow*, double, double);
 void scroll_callback(GLFWwindow*, double, double);
+
+void renderTexture();
 
 //Screen Dimensions Variables
 const unsigned int screen_width = 1200;
@@ -55,6 +59,10 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 cameraPos2 = glm::vec3(5.0f, 0.0f, 3.0f);
 glm::vec3 cameraTarget2 = glm::vec3(0.1f, 0.1f, -1.0f);
 glm::vec3 cameraUp2 = glm::vec3(0.0f, 1.0f, 0.0f);
+
+//texture
+unsigned int texture;
+int width, height, nrChannels;
 
 unsigned int currentCamera = 0;
 
@@ -101,14 +109,22 @@ int main() {
 	// Capture the mouse cursor
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	// Enable Depth Testing
+	// Enable depth testing
 	glEnable(GL_DEPTH_TEST);
+	// Specify the depth test function
+	glDepthFunc(GL_LESS); // Passes if the incoming depth value is less than the stored one
 	//This loop renders the window we created above 
 	Shader ourShader("shader.vs", "shader.fs");
 	//Set the model
 	modelLocation = glGetUniformLocation(ourShader.ID, "model");
 
 	init();
+
+	renderTexture();
+
+	//ourShader.use();
+
+	//glUniform1i(glGetUniformLocation(ourShader.ID, "texture"), 0);
 
 	transformations(ourShader);
 
@@ -141,6 +157,11 @@ int main() {
 		static const float black[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 		glClearBufferfv(GL_COLOR, 0, black);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// bind textures on corresponding texture units
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 
 		//Poll for Input/Output Events such a key pressed, mouse clicked etc... 
 
@@ -252,16 +273,16 @@ void init(void)
 	//	0.4f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-right
 	//	0.2f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-left
 	//};
-	float vertices1[] = {
-		0.4f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
-		0.6f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
-		0.6f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
-		0.4f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
+	float vertices1[] = {                   //Texture coords
+		0.4f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.6f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		0.4f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 
-		0.4f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
-		0.6f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
-		0.6f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
-		0.4f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.4f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		0.6f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.4f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 	};
 	// 
 	//Hexagon 2
@@ -274,16 +295,16 @@ void init(void)
 	//	0.4f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f,// Bottom-right
 	//	0.2f, 0.3f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom-left
 	//};
-	float vertices2[] = {
-		0.4f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
-		0.6f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f,
-		0.6f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
-		0.4f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,
+	float vertices2[] = {                   //Texture coords
+		0.4f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.6f, 0.4f, 0.6f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		0.4f, 0.6f, 0.6f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
 
-		0.4f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
-		0.6f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f,
-		0.6f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
-		0.4f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f,
+		0.4f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		0.6f, 0.4f, 0.4f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.6f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.4f, 0.6f, 0.4f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
 	};
 
 	//int indices[] = {
@@ -328,12 +349,16 @@ void init(void)
 	glBindVertexArray(VAO);
 
 	//position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	//color
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	// texture coord attribute information
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	//Indices
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -354,12 +379,16 @@ void init(void)
 	glBindVertexArray(VAO2);
 
 	//position
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	//color
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	// texture coord attribute information
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	//Indices
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO2);
@@ -473,4 +502,29 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 		fov = 1.0f;
 	if (fov > 45.0f)
 		fov = 45.0f;
+}
+
+void renderTexture() {
+	// texture 1
+	// ---------
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// load image (smilie.png) and create the texture 
+	unsigned char* data = stbi_load("assets/mc_view.jpg", &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
 }
