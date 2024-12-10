@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\keith\OneDrive\Desktop\OpenGLTutorials\include;$(ProjectDir)include;$(ProjectDir)glm;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\keith\OneDrive\Desktop\OpenGLTutorials\include;$(ProjectDir)include;$(ProjectDir)glm;$(ProjectDir)assets;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\keith\OneDrive\Desktop\OpenGLTutorials\libs;$(ProjectDir)libs;$(ProjectDir)glm;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -136,12 +136,24 @@
     <ClCompile Include="OpenGLTemplate.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="shaderinit.h" />
+    <ClInclude Include="shader_s.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cubemapshader.fs" />
+    <None Include="cubemapshader.vs" />
+    <None Include="geometryshader.fs" />
+    <None Include="geometryShader.gs" />
+    <None Include="geometryShader.vs" />
     <None Include="shader.fs" />
+    <None Include="shader.gs" />
+    <None Include="shader.tcs" />
+    <None Include="shader.tes" />
     <None Include="shader.vs" />
+    <None Include="skyboxshader.fs" />
+    <None Include="skyboxshader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

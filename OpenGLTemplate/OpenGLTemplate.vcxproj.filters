@@ -29,12 +29,48 @@
     <ClInclude Include="stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_s.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.vs">
       <Filter>Header Files</Filter>
     </None>
     <None Include="shader.fs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="skyboxshader.fs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="skyboxshader.vs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cubemapshader.fs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="cubemapshader.vs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="shader.gs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="shader.tcs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="shader.tes">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="geometryshader.fs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="geometryShader.vs">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="geometryShader.gs">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
