@@ -23,19 +23,19 @@ void build_house(vec3 position) {
     EmitVertex();
 
     gl_Position = transformedPosition + vec4(0.2, -0.2, 0.0, 0.0); // Right vertex
-    fColor = vec3(0.0, 1.0, 0.0);
+    fColor = vec3(1.0, 0.0, 0.0);
     EmitVertex();
 
     gl_Position = transformedPosition + vec4(-0.2, 0.2, 0.0, 0.0); // Top vertex
-    fColor = vec3(0.0, 0.0, 1.0);
+    fColor = vec3(1.0, 0.0, 1.0);
     EmitVertex();
 
     gl_Position = transformedPosition + vec4(0.2, 0.2, 0.0, 0.0); // Bottom-left vertex
-    fColor = vec3(1.0, 1.0, 0.0);
+    fColor = vec3(1.0, 0.0, 0.0);
     EmitVertex();
 
     gl_Position = transformedPosition + vec4(0.0, 0.4, 0.0, 0.0); // Bottom-right vertex
-    fColor = vec3(0.0, 1.0, 1.0);
+    fColor = vec3(1.0, 0.0, 1.0);
     EmitVertex();
 
     EndPrimitive();
